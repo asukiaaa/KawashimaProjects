@@ -1,3 +1,7 @@
+#include "HaLakeKitFirstConnector.h"
+
+HaLakeKitFirstConnector kitConnector(&Serial1);
+
 const int LED_PINS[] = {
   4,
   5,
@@ -18,6 +22,9 @@ const int LED_NUM = sizeof(LED_PINS) / sizeof(int);
 int i;
 int level;
 
+String kitStr;
+int receivedValue;
+
 void setup() {
   for (i=0; i<LED_NUM; i++) {
     pinMode(LED_PINS[i], OUTPUT);
@@ -26,7 +33,11 @@ void setup() {
 }
 
 void loop() {
-  level = (int) ((millis() / 1000) % (LED_NUM + 1));
+  kitStr = kitConnector.waitLine();
+  receivedValue = kitConnector.valueFromLine(kitStr);
+  level = (receivedValue / 1023) * 12;
+
+  //level = (int) ((millis() / 1000) % (LED_NUM + 1));
 
   for (i=0; i<LED_NUM; i++) {
     if (level < i) {
