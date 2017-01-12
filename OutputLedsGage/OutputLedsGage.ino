@@ -35,9 +35,7 @@ void setup() {
 void loop() {
   kitStr = kitConnector.waitLine();
   receivedValue = kitConnector.valueFromLine(kitStr);
-  level = (receivedValue / 1023) * 12;
-
-  //level = (int) ((millis() / 1000) % (LED_NUM + 1));
+  level = receivedValue * (LED_NUM + 1) / 1023;
 
   for (i=0; i<LED_NUM; i++) {
     if (level < i) {
