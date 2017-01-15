@@ -2,6 +2,7 @@
 #include <HaLakeKitFirstConnector.h>
 
 #define TOUCH_PIN_NUM 12
+//#define DEBUG_MODE
 
 Adafruit_MPR121 cap = Adafruit_MPR121();
 HaLakeKitFirstConnector kitConnector(&Serial1);
@@ -15,8 +16,6 @@ int sendValue;
 
 void setup() {
   while (!Serial);
-  //Serial.begin(9600);
-
   kitConnector.begin();
 
   // Arrd pin and address
@@ -25,6 +24,10 @@ void setup() {
   // SDA: 0x5C
   // SCL: 0x5D
   cap.begin(0x5A);
+#ifdef DEBUG_MODE
+  Serial.begin(115200);
+  Serial.println("start debug mode");
+#endif
 }
 
 void loop() {
@@ -46,6 +49,10 @@ void loop() {
   if (isTouched) {
     sendValue = 1023 * touchedPin / (TOUCH_PIN_NUM -1);
     kitConnector.sendValue(sendValue);
+#ifdef DEBUG_MODE
+    Serial.println("touched: " + String(touchedPin));
+    Serial.println("send value: " + String(sendValue));
+#endif
   }
   delay(50);
 }
