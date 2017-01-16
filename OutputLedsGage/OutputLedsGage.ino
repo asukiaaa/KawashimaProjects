@@ -26,6 +26,7 @@ String kitStr;
 int receivedValue;
 
 void setup() {
+  kitConnector.begin();
   for (i=0; i<LED_NUM; i++) {
     pinMode(LED_PINS[i], OUTPUT);
     digitalWrite(LED_PINS[i], LOW);
