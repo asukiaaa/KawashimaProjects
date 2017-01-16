@@ -36,10 +36,10 @@ void setup() {
 void loop() {
   kitStr = kitConnector.waitLine();
   receivedValue = kitConnector.valueFromLine(kitStr);
-  level = receivedValue * (LED_NUM + 1) / 1023;
+  level = receivedValue * LED_NUM / 1023;
 
   for (i=0; i<LED_NUM; i++) {
-    if (level < i) {
+    if (level >= i) {
       digitalWrite(LED_PINS[i], HIGH);
     } else {
       digitalWrite(LED_PINS[i], LOW);
