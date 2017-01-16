@@ -1,5 +1,7 @@
 #include "HaLakeKitFirstConnector.h"
 
+//#define DEBUG_MODE
+
 HaLakeKitFirstConnector kitConnector(&Serial1);
 
 const int LED_PINS[] = {
@@ -31,6 +33,9 @@ void setup() {
     pinMode(LED_PINS[i], OUTPUT);
     digitalWrite(LED_PINS[i], LOW);
   }
+#ifdef DEBUG_MODE
+  Serial.begin(115200);
+#endif
 }
 
 void loop() {
@@ -46,3 +51,8 @@ void loop() {
     }
   }
 }
+
+#ifdef DEBUG_MODE
+  Serial.println("receivedValue: " + String(receivedValue));
+  Serial.println("level: " + String(level));
+#endif
