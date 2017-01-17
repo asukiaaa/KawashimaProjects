@@ -1,14 +1,14 @@
 #include "HaLakeKitFirstConnector.h"
 
 const unsigned long SENSE_TIME_BUFF_MILLIS = 50;
-const int MAGNET_PINS[] = {2,3,4,5,6,7,8,9};
-const int MAGNET_VALS[] = {100, 200, 300, 400, 500, 600, 700, 800, 900};
+const int MAGNET_PINS[] = {9,8,7,6,5,4,3,2};
 const int MAGNET_NUM = sizeof(MAGNET_PINS)/sizeof(int);
 int i;
 
 bool isSensing  = false;
 unsigned long sensingFrom = 0;
 int sensingPin;
+int valueToSend;
 
 HaLakeKitFirstConnector kitConnector(&Serial1);
 
@@ -33,7 +33,8 @@ void loop() {
     }
   }
   if (isSensing && sensingFrom > SENSE_TIME_BUFF_MILLIS) {
-    kitConnector.sendValue(MAGNET_VALS[sensingPin]);
+    valueToSend = 1023 * sensingPin / (MAGNET_NUM - 1);
+    kitConnector.sendValue(valueToSend);
   }
   //Serial.println(MAGNET_NUM);
   //Serial.println(sensingPin);
