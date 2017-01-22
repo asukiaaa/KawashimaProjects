@@ -14,12 +14,12 @@ int valueToSend;
 HaLakeKitFirstConnector kitConnector(&Serial1);
 
 void setup() {
-  while (!Serial);
   kitConnector.begin();
   for (i=0; i<MAGNET_NUM; i++) {
     pinMode(MAGNET_PINS[i], INPUT_PULLUP);
   }
 #ifdef DEBUG_MODE
+  while (!Serial);
   Serial.begin(115200);
 #endif
 }

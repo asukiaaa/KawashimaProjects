@@ -34,6 +34,7 @@ void setup() {
     digitalWrite(LED_PINS[i], LOW);
   }
 #ifdef DEBUG_MODE
+  while(!Serial);
   Serial.begin(115200);
 #endif
 }

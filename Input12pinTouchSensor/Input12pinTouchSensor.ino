@@ -15,7 +15,6 @@ int touchedPin;
 int sendValue;
 
 void setup() {
-  while (!Serial);
   kitConnector.begin();
 
   // Arrd pin and address
@@ -25,6 +24,7 @@ void setup() {
   // SCL: 0x5D
   cap.begin(0x5A);
 #ifdef DEBUG_MODE
+  while (!Serial);
   Serial.begin(115200);
   Serial.println("start debug mode");
 #endif
