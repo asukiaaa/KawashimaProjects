@@ -1,25 +1,51 @@
 #include <HaLakeKitFirstConnector.h>
+#include "tones.h"
 #define SPEAKER_PIN 10
 
-HaLakeKitFirstConnector kitConnector(&Serial);
+#define MIN_FREQUENCY 50
+#define MAX_FREQUENCY 1000
 
 const int MODE_PINS[] = {2,3,4,5,6,7};
 const int MODE_NUM = sizeof(MODE_PINS)/sizeof(int);
+
+const int TONES_8[] = {
+  TONE_C4,
+  TONE_D4,
+  TONE_E4,
+  TONE_F4,
+  TONE_G4,
+  TONE_A4,
+  TONE_B4,
+  TONE_C5
+};
+
+const int TONES_10[] = {
+  TONE_B3,
+  TONE_C4,
+  TONE_D4,
+  TONE_E4,
+  TONE_F4,
+  TONE_G4,
+  TONE_A4,
+  TONE_B4,
+  TONE_C5,
+  TONE_D5
+};
+
+HaLakeKitFirstConnector kitConnector(&Serial);
+
 int i;
 int currentMode;
 String kitStr;
 int receivedValue;
 int soundFrequency;
 
-#define MIN_FREQUENCY 100
-#define MAX_FREQUENCY 1000
-
 void setup() {
   pinMode(SPEAKER_PIN, OUTPUT);
   for (i=0; i<MODE_NUM; i++) {
     pinMode(MODE_PINS[i], INPUT_PULLUP);
   }
-s}
+}
 
 void loop() {
   kitStr = kitConnector.waitLine();
@@ -47,6 +73,10 @@ int getMode() {
 
 int calcFrequency(int receivedValue, int currentMode) {
   switch(currentMode) {
+    case 3:
+    return TONES_10[map(receivedValue, 0, 1023, 0, 9)];
+    case 2:
+    return TONES_8[map(receivedValue, 0, 1023, 0, 7)];
     case 1:
     return map(receivedValue, 0, 1023, MIN_FREQUENCY, MAX_FREQUENCY/2);
     default: // case 0
