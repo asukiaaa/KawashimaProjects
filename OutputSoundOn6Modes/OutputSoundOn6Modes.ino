@@ -34,7 +34,11 @@ const int TONES_10[] = {
   TONE_D5
 };
 
+#ifdef USBCON
+HaLakeKitFirstConnector kitConnector(&Serial1);
+#else
 HaLakeKitFirstConnector kitConnector(&Serial);
+#endif
 
 int i;
 int currentMode;
