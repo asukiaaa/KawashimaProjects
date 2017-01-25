@@ -2,6 +2,8 @@
 #include "tones.h"
 #define SPEAKER_PIN 10
 
+//#define DEBUG_MODE
+
 #define MIN_FREQUENCY 50
 #define MAX_FREQUENCY 1000
 
@@ -45,12 +47,19 @@ void setup() {
   for (i=0; i<MODE_NUM; i++) {
     pinMode(MODE_PINS[i], INPUT_PULLUP);
   }
+#ifdef DEBUG_MODE
+  Serial.begin(HALAKEKITFIRST_SERIAL_SPEED);
+#endif
 }
 
 void loop() {
   kitStr = kitConnector.waitLine();
   receivedValue = kitConnector.valueFromLine(kitStr);
   currentMode = getMode();
+
+#ifdef DEBUG_MODE
+  Serial.print(kitStr);
+#endif
 
   if (receivedValue < 0) {
     soundFrequency = 0;
