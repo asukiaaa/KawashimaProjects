@@ -47,6 +47,7 @@ int receivedValue;
 int soundFrequency;
 
 void setup() {
+  kitConnector.begin();
   pinMode(SPEAKER_PIN, OUTPUT);
   for (i=0; i<MODE_NUM; i++) {
     pinMode(MODE_PINS[i], INPUT_PULLUP);
