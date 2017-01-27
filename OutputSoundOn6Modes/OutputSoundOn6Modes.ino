@@ -88,12 +88,16 @@ int getMode() {
 int calcFrequency(int receivedValue, int currentMode) {
   switch(currentMode) {
     case 3:
-    return TONES_10[map(receivedValue, 0, 1023, 0, 9)];
+    return getLevel(receivedValue, 10);
     case 2:
-    return TONES_8[map(receivedValue, 0, 1023, 0, 7)];
+    return getLevel(receivedValue, 8);
     case 1:
     return map(receivedValue, 0, 1023, MIN_FREQUENCY, MAX_FREQUENCY/2);
     default: // case 0
     return map(receivedValue, 0, 1023, MIN_FREQUENCY, MAX_FREQUENCY);
   }
+}
+
+int getLevel(int value, int levelLessThan) {
+  return value * (levelLessThan - 1) / 1023;
 }
