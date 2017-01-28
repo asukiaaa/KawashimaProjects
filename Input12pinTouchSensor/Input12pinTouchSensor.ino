@@ -1,21 +1,20 @@
 #include <Adafruit_MPR121.h>
-#include <HaLakeKitFirstConnector.h>
+#include <HaLakeKitFirst.h>
 
 #define TOUCH_PIN_NUM 12
 //#define DEBUG_MODE
 
 Adafruit_MPR121 cap = Adafruit_MPR121();
-HaLakeKitFirstConnector kitConnector(&Serial1);
+HaLakeKitFirst kitFirst(&Serial1);
 
 uint16_t lasttouched = 0;
 uint16_t currtouched = 0;
 
 bool isTouched;
 int touchedPin;
-int sendValue;
 
 void setup() {
-  kitConnector.begin();
+  kitFirst.begin();
 
   // Arrd pin and address
   // 5V or NC: 0x5A
@@ -47,8 +46,7 @@ void loop() {
   lasttouched = currtouched;
 
   if (isTouched) {
-    sendValue = 1023 * touchedPin / (TOUCH_PIN_NUM -1);
-    kitConnector.sendValue(sendValue);
+    kitFirst.sendValue(touchedPin, 0, TOUCH_PIN_NUM - 1);
 #ifdef DEBUG_MODE
     Serial.println("touched: " + String(touchedPin));
     Serial.println("send value: " + String(sendValue));

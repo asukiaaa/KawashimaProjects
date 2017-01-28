@@ -1,4 +1,4 @@
-#include "HaLakeKitFirstConnector.h"
+#include "HaLakeKitFirst.h"
 //#define DEBUG_MODE
 
 const unsigned long SENSE_TIME_BUFF_MILLIS = 50;
@@ -9,12 +9,11 @@ int i;
 bool isSensing  = false;
 unsigned long sensingFrom = 0;
 int sensingPin;
-int valueToSend;
 
-HaLakeKitFirstConnector kitConnector(&Serial1);
+HaLakeKitFirst kitFirst(&Serial1);
 
 void setup() {
-  kitConnector.begin();
+  kitFirst.begin();
   for (i=0; i<MAGNET_NUM; i++) {
     pinMode(MAGNET_PINS[i], INPUT_PULLUP);
   }
@@ -37,8 +36,7 @@ void loop() {
     }
   }
   if (isSensing && sensingFrom > SENSE_TIME_BUFF_MILLIS) {
-    valueToSend = 1023 * sensingPin / (MAGNET_NUM - 1);
-    kitConnector.sendValue(valueToSend);
+    kitFirst.sendValue(sensingPin, 0, MAGNET_NUM - 1);
 #ifdef DEBUG_MODE
     Serial.println("sendingPin: " + String(sensingPin));
     Serial.println("valueToSend: " + String(valueToSend));

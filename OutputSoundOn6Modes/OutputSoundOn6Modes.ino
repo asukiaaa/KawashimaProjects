@@ -1,4 +1,4 @@
-#include <HaLakeKitFirstConnector.h>
+#include <HaLakeKitFirst.h>
 #include "tones.h"
 #define SPEAKER_PIN 10
 
@@ -35,9 +35,9 @@ const int TONES_10[] = {
 };
 
 #ifdef USBCON
-HaLakeKitFirstConnector kitConnector(&Serial1);
+HaLakeKitFirst kitFirst(&Serial1);
 #else
-HaLakeKitFirstConnector kitConnector(&Serial);
+HaLakeKitFirst kitFirst(&Serial);
 #endif
 
 int i;
@@ -47,7 +47,7 @@ int receivedValue;
 int soundFrequency;
 
 void setup() {
-  kitConnector.begin();
+  kitFirst.begin();
   pinMode(SPEAKER_PIN, OUTPUT);
   for (i=0; i<MODE_NUM; i++) {
     pinMode(MODE_PINS[i], INPUT_PULLUP);
@@ -58,18 +58,15 @@ void setup() {
 }
 
 void loop() {
-  kitStr = kitConnector.waitLine();
-  receivedValue = kitConnector.valueFromLine(kitStr);
   currentMode = getMode();
 
+  if (kitFirst.receive()) {
+    soundFrequency = getFrequency(&kitFirst, currentMode);
 #ifdef DEBUG_MODE
-  Serial.print(kitStr);
+    Serial.print(kitFirst.getReceivedString());
 #endif
-
-  if (receivedValue < 0) {
-    soundFrequency = 0;
   } else {
-    soundFrequency = calcFrequency(receivedValue, currentMode);
+    soundFrequency = 0;
   }
 
   tone(SPEAKER_PIN, soundFrequency, 100);
@@ -85,16 +82,16 @@ int getMode() {
   return -1;
 }
 
-int calcFrequency(int receivedValue, int currentMode) {
+int getFrequency(HaLakeKitFirst* kitFirst, int currentMode) {
   switch(currentMode) {
     case 3:
-    return getLevel(receivedValue, 10);
+    return kitFirst->getReceivedValue(0, 9);
     case 2:
-    return getLevel(receivedValue, 8);
+    return kitFirst->getReceivedValue(0, 7);
     case 1:
-    return map(receivedValue, 0, 1023, MIN_FREQUENCY, MAX_FREQUENCY/2);
+    return kitFirst->getReceivedValue(MIN_FREQUENCY, MAX_FREQUENCY/2);
     default: // case 0
-    return map(receivedValue, 0, 1023, MIN_FREQUENCY, MAX_FREQUENCY);
+    return kitFirst->getReceivedValue(MIN_FREQUENCY, MAX_FREQUENCY);
   }
 }
 

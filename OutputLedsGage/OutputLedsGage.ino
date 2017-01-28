@@ -1,8 +1,8 @@
-#include "HaLakeKitFirstConnector.h"
+#include "HaLakeKitFirst.h"
 
 //#define DEBUG_MODE
 
-HaLakeKitFirstConnector kitConnector(&Serial1);
+HaLakeKitFirst kitFirst(&Serial1);
 
 const int LED_PINS[] = {
   4,
@@ -24,11 +24,8 @@ const int LED_NUM = sizeof(LED_PINS) / sizeof(int);
 int i;
 int level;
 
-String kitStr;
-int receivedValue;
-
 void setup() {
-  kitConnector.begin();
+  kitFirst.begin();
   for (i=0; i<LED_NUM; i++) {
     pinMode(LED_PINS[i], OUTPUT);
     digitalWrite(LED_PINS[i], LOW);
@@ -40,9 +37,9 @@ void setup() {
 }
 
 void loop() {
-  kitStr = kitConnector.waitLine();
-  receivedValue = kitConnector.valueFromLine(kitStr);
-  level = receivedValue * LED_NUM / 1023;
+  if (kitFirst.receive()) {
+    level = kitFirst.getReceivedValue(0, LED_NUM - 1);
+  }
 
   for (i=0; i<LED_NUM; i++) {
     if (level >= i) {
