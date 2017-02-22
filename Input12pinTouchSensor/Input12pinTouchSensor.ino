@@ -49,7 +49,6 @@ void loop() {
     kitFirst.sendValue(touchedPin, 0, TOUCH_PIN_NUM - 1);
 #ifdef DEBUG_MODE
     Serial.println("touched: " + String(touchedPin));
-    Serial.println("send value: " + String(sendValue));
 #endif
   }
   delay(50);
