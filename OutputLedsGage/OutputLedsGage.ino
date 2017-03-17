@@ -33,12 +33,16 @@ void setup() {
 #ifdef DEBUG_MODE
   while(!Serial);
   Serial.begin(115200);
+  Serial.println("started debug mode");
 #endif
 }
 
 void loop() {
   if (kitFirst.receive()) {
     level = kitFirst.getReceivedValue(0, LED_NUM - 1);
+#ifdef DEBUG_MODE
+    Serial.println("level: " + String(level));
+#endif
   }
 
   for (i=0; i<LED_NUM; i++) {
@@ -49,8 +53,3 @@ void loop() {
     }
   }
 }
-
-#ifdef DEBUG_MODE
-  Serial.println("receivedValue: " + String(receivedValue));
-  Serial.println("level: " + String(level));
-#endif
