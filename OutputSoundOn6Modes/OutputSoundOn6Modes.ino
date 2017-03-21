@@ -21,7 +21,8 @@ const int TONES_8[] = {
   TONE_C5
 };
 
-const int TONES_10[] = {
+const int TONES_12[] = {
+  TONE_A3,
   TONE_B3,
   TONE_C4,
   TONE_D4,
@@ -31,7 +32,8 @@ const int TONES_10[] = {
   TONE_A4,
   TONE_B4,
   TONE_C5,
-  TONE_D5
+  TONE_D5,
+  TONE_D6
 };
 
 #ifdef USBCON
@@ -85,9 +87,9 @@ int getMode() {
 int getFrequency(HaLakeKitFirst* kitFirst, int currentMode) {
   switch(currentMode) {
     case 3:
-    return kitFirst->getReceivedValue(0, 9);
+    return TONES_12[kitFirst->getReceivedValue(0, 11)];
     case 2:
-    return kitFirst->getReceivedValue(0, 7);
+    return TONES_8[kitFirst->getReceivedValue(0, 7)];
     case 1:
     return kitFirst->getReceivedValue(MIN_FREQUENCY, MAX_FREQUENCY/2);
     default: // case 0
