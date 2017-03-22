@@ -56,16 +56,26 @@ void setup() {
   }
 #ifdef DEBUG_MODE
   Serial.begin(HALAKEKITFIRST_SERIAL_SPEED);
+  Serial.println("Start debug mode");
 #endif
 }
 
 void loop() {
+#ifdef DEBUG_MODE
+  Serial.print("in loop ");
+  Serial.println(millis());
+#endif
   currentMode = getMode();
 
   if (kitFirst.receive()) {
     soundFrequency = getFrequency(&kitFirst, currentMode);
 #ifdef DEBUG_MODE
-    Serial.print(kitFirst.getReceivedString());
+    Serial.print("received string: ");
+    Serial.println(kitFirst.getReceivedString());
+    Serial.print("mode: ");
+    Serial.println(getMode());
+    Serial.print("soundFrequency: ");
+    Serial.println(soundFrequency);
 #endif
   } else {
     soundFrequency = 0;
