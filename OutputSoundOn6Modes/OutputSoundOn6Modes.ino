@@ -33,7 +33,7 @@ const int TONES_12[] = {
   TONE_B4,
   TONE_C5,
   TONE_D5,
-  TONE_D6
+  TONE_E5
 };
 
 #ifdef USBCON
