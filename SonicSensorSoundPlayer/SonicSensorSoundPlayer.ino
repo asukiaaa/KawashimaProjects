@@ -21,10 +21,9 @@
 
 #include "Arduino.h"
 #include "SoftwareSerial.h"
-#include "DFRobotDFPlayerMini.h"
+#include <DFPlayer_Mini_Mp3.h>
 
 SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
-DFRobotDFPlayerMini myDFPlayer;
 
 #define TRIG1_PIN A1
 #define ECHO1_PIN A2
@@ -69,53 +68,19 @@ void setup() {
   Serial.println(F("DFRobot DFPlayer Mini Demo"));
   Serial.println(F("Initializing DFPlayer ... (May take 3~5 seconds)"));
 
-  if (!myDFPlayer.begin(mySoftwareSerial)) {  //Use softwareSerial to communicate with mp3.
-    Serial.println(F("Unable to begin:"));
-    Serial.println(F("1.Please recheck the connection!"));
-    Serial.println(F("2.Please insert the SD card!"));
-    while(true);
-  }
-  Serial.println(F("DFPlayer Mini online."));
-
-  myDFPlayer.setTimeOut(500); //Set serial communictaion time out 500ms
-
-  //----Set volume----
-  myDFPlayer.volume(10);  //Set volume value (0~30).
-  myDFPlayer.volumeUp(); //Volume Up
-  myDFPlayer.volumeDown(); //Volume Down
-
-  //----Set different EQ----
-  myDFPlayer.EQ(DFPLAYER_EQ_NORMAL);
-
-  //----Set device we use SD as default----
-  myDFPlayer.outputDevice(DFPLAYER_DEVICE_SD);
-
-  //Serial.println("play1");
-  //myDFPlayer.play(1);
-  //myDFPlayer.playMp3Folder(1);
-  //delay(2000);
-  //Serial.println("play2");
-  //myDFPlayer.play(2);
-  //myDFPlayer.playMp3Folder(2);
-  //delay(2000);
-  //Serial.println("play1-1");
-  //myDFPlayer.play(3);
-  //myDFPlayer.playLargeFolder(currentChannel, 1);
-  //delay(2000);
-  //Serial.println("play1-2");
-  //myDFPlayer.play(4);
-  //myDFPlayer.playLargeFolder(currentChannel, 2);
-  //delay(2000);
-  //myDFPlayer.stop();
+  mp3_set_serial(mySoftwareSerial);
+  mp3_set_volume(15);
 }
 
 void loop() {
+  //Serial.println(getDistance(TRIG1_PIN, ECHO1_PIN));
+  //Serial.println(getDistance(TRIG2_PIN, ECHO2_PIN));
+  //delay(1000);
   static float distance;
   Serial.print("distance: ");
   Serial.println(distance);
   Serial.print("playing?: ");
   Serial.println(isPlaying());
-
 
   if (isPlaying() && playingMusic) {
     Serial.println("watch to stop");
@@ -126,7 +91,7 @@ void loop() {
       playMusic(currentChannel, 2);
       delay(2000);
     }
-  
+
   } else {
     Serial.println("wait to trigger playing");
     distance = getDistance(TRIG1_PIN, ECHO1_PIN);
@@ -138,11 +103,15 @@ void loop() {
       Serial.println("play music");
       playMusic(currentChannel, 1);
       playingMusic = true;
+      delay(100);
     }
   }
 }
 
 void playMusic(int channel, int number) {
-  myDFPlayer.play(2 * (channel-1) + number);
-  //myDFPlayer.playLargeFolder(channel, number);
+  uint16_t play_number = 2 * (channel-1) + number;
+  //Serial.print("play: ");
+  //Serial.println(play_number);
+  mp3_play_physical(play_number);
+  //mp3_play_file_in_folder(channel, number);
 }
