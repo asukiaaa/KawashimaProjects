@@ -109,9 +109,9 @@ void loop() {
 }
 
 void playMusic(int channel, int number) {
-  uint16_t play_number = 2 * (channel-1) + number;
+  //uint16_t play_number = 2 * (channel-1) + number;
   //Serial.print("play: ");
   //Serial.println(play_number);
-  mp3_play(play_number);
-  //mp3_play_file_in_folder(channel, number);
+  //mp3_play(play_number);
+  mp3_play_file_in_folder(channel, number);
 }

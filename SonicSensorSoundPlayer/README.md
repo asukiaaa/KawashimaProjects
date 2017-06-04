@@ -13,12 +13,15 @@ A project to play mp3 file by ultora sonic sensor value.
 # Files on SD
 ```
 mp3
- |- 0001.mp3 // music
- |- 0002.mp3 // stop sound
- |- 0003.mp3 // music
- \- 0004.mp3 // stop sound
+ |- 01
+ |  |- 001.mp3 // music
+ |  \- 002.mp3 // stop sound
+ \- 02
+    |- 001.mp3 // music
+    \- 002.mp3 // stop sound
 ```
 
 # References
 - [DFPlayer](https://www.dfrobot.com/wiki/index.php/DFPlayer_Mini_SKU:DFR0299)
 - [sound effect](http://soundeffect-lab.info/sound/anime/)
+- [シリアル通信で制御可能なMP3プレーヤー](http://www.ne.jp/asahi/shared/o-family/ElecRoom/AVRMCOM/MP3module/MP3module.html)
