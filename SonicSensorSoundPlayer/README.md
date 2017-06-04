@@ -13,10 +13,10 @@ A project to play mp3 file by ultora sonic sensor value.
 # Files on SD
 ```
 mp3
- |- 01.mp3 // music
- |- 02.mp3 // stop sound
- |- 03.mp3 // music
- \- 04.mp3 // stop sound
+ |- 0001.mp3 // music
+ |- 0002.mp3 // stop sound
+ |- 0003.mp3 // music
+ \- 0004.mp3 // stop sound
 ```
 
 # References
