@@ -26,10 +26,10 @@
 SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
 DFRobotDFPlayerMini myDFPlayer;
 
-#define TRIG1_PIN A2
-#define ECHO1_PIN A3
-#define TRIG2_PIN A4
-#define ECHO2_PIN A5
+#define TRIG1_PIN A1
+#define ECHO1_PIN A2
+#define TRIG2_PIN A3
+#define ECHO2_PIN A4
 #define PLAY_CHECK_PIN 9
 #define MAX_CHANNEL 2
 
