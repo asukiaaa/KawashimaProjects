@@ -1,15 +1,16 @@
 #include <HaLakeKitFirst.h>
-
 #include "tones.h"
 #define SPEAKER_PIN A0
 
 //#define DEBUG_MODE
 
-#define MIN_FREQUENCY 50
-#define MAX_FREQUENCY 1000
+#define SOUND_CONTINUE 0
+#define SOUND_STOP 1
+#define SOUND_PLAY 2
+#define SOUND_CHANGE 3
 
 const int TONE_LIST[] = {
-  TONE_B4,
+  TONE_B3,
   TONE_C4,
   TONE_D4,
   TONE_E4,
@@ -37,6 +38,7 @@ bool requestedToChange = false;
 bool isPlaying = false;
 int playMode = 0;
 const int MAX_PLAY_MODE = 2;
+int baseTone = 1;
 
 #ifdef USBCON
 HaLakeKitFirst kitFirst(&Serial1);
@@ -56,87 +58,67 @@ void setup() {
 }
 
 void loop() {
+  int soundAction = SOUND_CONTINUE;
+
   if (kitFirst.receive()) {
     int receivedValue = kitFirst.getReceivedValue(0, HALAKEKITFIRST_MAX_VALUE);
-    int soundMode = 2;
     if (receivedValue < HALAKEKITFIRST_MAX_VALUE / 3 ) {
-      soundMode = 0;
+      soundAction = SOUND_PLAY;
     } else if (receivedValue < ( HALAKEKITFIRST_MAX_VALUE / 3 ) * 2 ) {
-      soundMode = 1;
+      soundAction = SOUND_STOP;
+    } else {
+      soundAction = SOUND_CHANGE;
     }
 #ifdef DEBUG_MODE
-    Serial.print(kitFirst.getReceivedString());
-    Serial.print(soundMode);
+    Serial.println(kitFirst.getReceivedString());
+    Serial.println("soundAction: " + String(soundAction));
 #endif
-    if (soundMode == 0) {
-      requestedToChange = true;
-    } else if (soundMode == 1) {
-      requestedToStop = true;
-    } else {
-      requestedToPlay = true;
-    }
   }
 
-  if (isPlaying && requestedToStop) {
+  if (isPlaying && soundAction == SOUND_STOP) {
+    isPlaying = false;
 #ifdef DEBUG_MODE
     Serial.println("stop");
 #endif
-    isPlaying = false;
-    requestedToStop = false;
-    tone(SPEAKER_PIN, TONE_LIST[0], 100);
+    tone(SPEAKER_PIN, TONE_LIST[baseTone + 1], 100);
     delay(100);
-    tone(SPEAKER_PIN, TONE_LIST[0], 100);
-  } else if (requestedToChange) {
-    requestedToChange = false;
+    tone(SPEAKER_PIN, TONE_LIST[baseTone], 100);
+    delay(100);
+    tone(SPEAKER_PIN, TONE_LIST[baseTone + 1], 100);
+    delay(100);
+    tone(SPEAKER_PIN, TONE_LIST[baseTone], 100);
+    delay(100);
+    tone(SPEAKER_PIN, TONE_LIST[baseTone - 1], 100);
+    delay(100);
+    //tone(SPEAKER_PIN, TONE_LIST[0], 100);
+  } else if (!isPlaying && soundAction == SOUND_CHANGE) {
 #ifdef DEBUG_MODE
     Serial.println("change");
 #endif
-    playMode ++;
-    if (playMode > MAX_PLAY_MODE) {
-      playMode = 0;
+    baseTone ++;
+    if (baseTone >= TONES_NUM - 1) {
+      baseTone = 1;
     }
-  } else if (requestedToPlay) {
-    requestedToPlay = false;
+    tone(SPEAKER_PIN, TONE_LIST[baseTone], 100);
+    delay(100);
+  } else if (! isPlaying && soundAction == SOUND_PLAY) {
+    isPlaying = true;
 #ifdef DEBUG_MODE
     Serial.println("play");
 #endif
-    tone(SPEAKER_PIN, TONE_LIST[0], 500);
-  } if (isPlaying) {
+  }
+
+  if (isPlaying) {
 #ifdef DEBUG_MODE
-    Serial.println("play");
+    Serial.println("playing");
 #endif
-    tone(SPEAKER_PIN, TONE_LIST[1], 10);
-    delay(500);
+    tone(SPEAKER_PIN, TONE_LIST[baseTone], 100);
+    delay(1);
   } else {
 #ifdef DEBUG_MODE
-    Serial.println("none");
+    Serial.println("not playing");
 #endif
-    delay(500);
   }
-  delay(100);
-}
-
-void loop1() {
-#ifdef DEBUG_MODE
-  Serial.println("in loop1");
-#endif
-  if (kitFirst.receive()) {
-    int soundMode = kitFirst.getReceivedValue(0, 2);
-    Serial.println(soundMode);
-#ifdef DEBUG_MODE
-    Serial.print(kitFirst.getReceivedString());
-    Serial.print(soundMode);
-#endif
-    if (soundMode == 0) {
-      requestedToChange = true;
-    } else if (soundMode == 1) {
-      requestedToStop = true;
-    } else {
-      requestedToPlay = true;
-    }
-  }
-  Serial.println("end loop1");
   delay(10);
-  yield();
 }
 
