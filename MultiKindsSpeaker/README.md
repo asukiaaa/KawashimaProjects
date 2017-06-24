@@ -21,6 +21,12 @@ mp3
     \- 002.mp3 // stop sound
 ```
 
+# Requirement
+[DFRobotDFPlayerMini](https://github.com/DFRobot/DFRobotDFPlayerMini)
+
+# License
+MIT
+
 # References
 - [DFPlayer](https://www.dfrobot.com/wiki/index.php/DFPlayer_Mini_SKU:DFR0299)
 - [sound effect](http://soundeffect-lab.info/sound/anime/)

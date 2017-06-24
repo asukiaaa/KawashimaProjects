@@ -8,10 +8,10 @@ A project to play musics and stop with stop musics.
 - SD card holder
 - Connector for HaLakeKitFirst
 
-# Libraries
+# Requirements
 These are needed to install by library manager.
 - AudioZero
-- HaLakeKitFirst
+- [HaLakeKitFirst](https://github.com/nyampass/HaLakeKitFirst-Library)
 
 # License
 MIT

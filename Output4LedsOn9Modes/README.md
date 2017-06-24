@@ -1,5 +1,5 @@
-# OutputLedGage
-An arduino project to control a gage which has multiple led modules.
+# Output4LedsOn9Modes
+A project to control 4 leds as an output module.
 
 # Requirement
 [HaLakeKitFirst](https://github.com/nyampass/HaLakeKitFirst-Library)

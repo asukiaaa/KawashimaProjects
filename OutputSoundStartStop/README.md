@@ -1,5 +1,5 @@
-# OutputLedGage
-An arduino project to control a gage which has multiple led modules.
+# OutputSoundStartStop
+A project to output beep sound.
 
 # Requirement
 [HaLakeKitFirst](https://github.com/nyampass/HaLakeKitFirst-Library)

@@ -27,3 +27,9 @@ For Arduino Leonardo or Pro Micro.
 - D7(RX)
 - D8(TX)
 - GND
+
+# Requirement
+[HaLakeKitFirst](https://github.com/nyampass/HaLakeKitFirst-Library)
+
+# License
+MIT
