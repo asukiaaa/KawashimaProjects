@@ -5,7 +5,11 @@
 //#define DEBUG_MODE
 
 Adafruit_MPR121 cap = Adafruit_MPR121();
+#ifdef USBCON
 HaLakeKitFirst kitFirst(&Serial1);
+#else
+HaLakeKitFirst kitFirst(&Serial);
+#endif
 
 uint16_t lasttouched = 0;
 uint16_t currtouched = 0;
