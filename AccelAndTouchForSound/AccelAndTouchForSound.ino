@@ -9,12 +9,18 @@
 #define ACTIVE_BUFF_MS 1000
 #define ACCEL_SMALL 1.3
 #define ACCEL_LARGE 1.8
+#define VOLUME_PIN 3
+#define VOLUME_ANALOG_MAX 610
+#define VOLUME_ANALOG_MIN 0
+#define VOLUME_MAX 30
+#define VOLUME_MIN 1
 
 MPU9250 mySensor;
 Adafruit_MPR121 cap = Adafruit_MPR121();
 SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
 
 uint8_t currentChannel = 1;
+uint8_t currentVolume = 1;
 boolean playingMusic = false;
 unsigned long active_at = 0;
 
@@ -27,42 +33,60 @@ void setup() {
   cap.begin(0x5A);
   //Serial.println("init mp3 player");
   mp3_set_serial(mySoftwareSerial);
-  mp3_set_volume(1);
+  mp3_set_volume(currentVolume);
   //Serial.println("finished setup");
 }
 
 void loop() {
+  uint8_t candidateVolume = getVolume();
   static bool isTouched;
   static int touchedPin;
+
+  if (candidateVolume != currentVolume) {
+    currentVolume = candidateVolume;
+    Serial.println("set volume " + String(candidateVolume));
+    mp3_set_volume(currentVolume);
+  }
 
   mySensor.accelUpdate();
   updateTouchStatus(&isTouched, &touchedPin);
   float accel = mySensor.accelSqrt();
-  Serial.println(accel);
+  //Serial.println(accel);
 
   // wait ACTIVE_BUFF_MS from last activation
   if ((accel > ACCEL_SMALL || isTouched) &&
       active_at + ACTIVE_BUFF_MS < millis()) {
-    Serial.print("active ");
+    //Serial.print("active");
     active_at = millis();
     if ((!isTouched && accel < ACCEL_LARGE) ||
         (isTouched && playingMusic && isPlaying())) {
-      Serial.print("stop");
-      Serial.print(currentChannel);
+      Serial.println("play short sound " + String(currentChannel));
       mp3_play_file_in_folder(currentChannel, 2);
       if (isPlaying() && playingMusic) {
         currentChannel = getNextChannel(currentChannel);
       }
       playingMusic = false;
     } else {
-      Serial.print("play ");
-      Serial.println(currentChannel);
+      Serial.println("play music " + String(currentChannel));
       playingMusic = true;
       mp3_play_file_in_folder(currentChannel, 1);
     }
   }
 
   delay(100);
+}
+
+int getVolume() {
+  int analogValue = analogRead(VOLUME_PIN);
+  int volume =
+    (analogValue - VOLUME_ANALOG_MIN)
+    * (VOLUME_MAX - VOLUME_MIN)
+    / (VOLUME_ANALOG_MAX - VOLUME_ANALOG_MIN)
+    + VOLUME_MIN;
+  volume = max(volume, VOLUME_MIN);
+  volume = min(volume, VOLUME_MAX);
+  Serial.println(volume);
+  return volume;
 }
 
 uint8_t getNextChannel(uint8_t channel) {
