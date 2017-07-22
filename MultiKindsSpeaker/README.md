@@ -14,11 +14,12 @@ A project to play mp3 file by ultora sonic sensor value.
 ```
 mp3
  |- 01
- |  |- 001.mp3 // music
- |  \- 002.mp3 // stop sound
- \- 02
-    |- 001.mp3 // music
-    \- 002.mp3 // stop sound
+ |  |- 0001.mp3 // music
+ |  \- 0002.mp3 // stop sound
+ |- 02
+ |  \- 0001.mp3 // music
+ \- 03
+    \- 0001.mp3 // music
 ```
 
 # Requirement

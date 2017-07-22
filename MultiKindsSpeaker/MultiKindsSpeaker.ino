@@ -30,7 +30,7 @@ SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
 #define TRIG2_PIN A3
 #define ECHO2_PIN A4
 #define PLAY_CHECK_PIN 9
-#define MAX_CHANNEL 2
+#define MAX_CHANNEL 3
 
 uint8_t currentChannel = 1;
 boolean playingMusic = false;
@@ -88,7 +88,8 @@ void loop() {
     if (distance < 40) {
       Serial.println("stop music");
       playingMusic = false;
-      playMusic(currentChannel, 2);
+      //playMusic(currentChannel, 2);
+      playMusic(1, 2);
       delay(2000);
     }
 
