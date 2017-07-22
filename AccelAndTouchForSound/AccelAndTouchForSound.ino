@@ -7,8 +7,7 @@
 #define MAX_CHANNEL 3
 #define PLAY_CHECK_PIN 9
 #define ACTIVE_BUFF_MS 1000
-#define ACCEL_SMALL 1.3
-#define ACCEL_LARGE 1.8
+#define ACCEL_MIN 1.3
 #define VOLUME_PIN 3
 #define VOLUME_ANALOG_MAX 610
 #define VOLUME_ANALOG_MIN 0
@@ -54,17 +53,14 @@ void loop() {
   //Serial.println(accel);
 
   // wait ACTIVE_BUFF_MS from last activation
-  if ((accel > ACCEL_SMALL || isTouched) &&
+  if ((accel > ACCEL_MIN || isTouched) &&
       active_at + ACTIVE_BUFF_MS < millis()) {
     //Serial.print("active");
     active_at = millis();
-    if ((!isTouched && accel < ACCEL_LARGE) ||
-        (isTouched && playingMusic && isPlaying())) {
+    if (playingMusic && isPlaying()) {
       Serial.println("play short sound " + String(currentChannel));
       mp3_play_file_in_folder(currentChannel, 2);
-      if (isPlaying() && playingMusic) {
-        currentChannel = getNextChannel(currentChannel);
-      }
+      currentChannel = getNextChannel(currentChannel);
       playingMusic = false;
     } else {
       Serial.println("play music " + String(currentChannel));
