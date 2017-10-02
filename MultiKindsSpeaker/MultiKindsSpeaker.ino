@@ -25,10 +25,8 @@
 
 SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
 
-#define TRIG1_PIN A1
-#define ECHO1_PIN A2
-#define TRIG2_PIN A3
-#define ECHO2_PIN A4
+#define TRIG_PIN A1
+#define ECHO_PIN A2
 #define PLAY_CHECK_PIN 9
 #define MAX_CHANNEL 3
 
@@ -55,10 +53,8 @@ float getDistance(int trig_pin, int echo_pin) {
 }
 
 void setup() {
-  pinMode(ECHO1_PIN, INPUT);
-  pinMode(TRIG1_PIN, OUTPUT);
-  pinMode(ECHO2_PIN, INPUT);
-  pinMode(TRIG2_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(TRIG_PIN, OUTPUT);
   pinMode(PLAY_CHECK_PIN, INPUT);
 
   mySoftwareSerial.begin(9600);
@@ -73,18 +69,17 @@ void setup() {
 }
 
 void loop() {
-  //Serial.println(getDistance(TRIG1_PIN, ECHO1_PIN));
-  //Serial.println(getDistance(TRIG2_PIN, ECHO2_PIN));
+  //Serial.println(getDistance(TRIG_PIN, ECHO_PIN));
   //delay(1000);
   static float distance;
   Serial.print("distance: ");
   Serial.println(distance);
   Serial.print("playing?: ");
   Serial.println(isPlaying());
+  distance = getDistance(TRIG_PIN, ECHO_PIN);
 
   if (isPlaying() && playingMusic) {
     Serial.println("watch to stop");
-    distance = getDistance(TRIG2_PIN, ECHO2_PIN);
     if (distance < 40) {
       Serial.println("stop music");
       playingMusic = false;
@@ -95,7 +90,6 @@ void loop() {
 
   } else {
     Serial.println("wait to trigger playing");
-    distance = getDistance(TRIG1_PIN, ECHO1_PIN);
     if (distance < 40) {
       currentChannel ++;
       if (currentChannel > MAX_CHANNEL) {
@@ -104,7 +98,7 @@ void loop() {
       Serial.println("play music");
       playMusic(currentChannel, 1);
       playingMusic = true;
-      delay(100);
+      delay(1000);
     }
   }
 }
