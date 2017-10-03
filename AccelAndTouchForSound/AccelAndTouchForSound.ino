@@ -28,7 +28,7 @@ void setup() {
   Serial.begin(115200);
   //Serial.println("start setup");
   mySoftwareSerial.begin(9600);
-  mySensor.begin();
+  mySensor.beginAccel();
   cap.begin(0x5A);
   //Serial.println("init mp3 player");
   mp3_set_serial(mySoftwareSerial);
