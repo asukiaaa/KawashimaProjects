@@ -28,6 +28,8 @@ void setup() {
   Serial.begin(115200);
   //Serial.println("start setup");
   mySoftwareSerial.begin(9600);
+  Wire.begin();
+  mySensor.setWire(&Wire);
   mySensor.beginAccel();
   cap.begin(0x5A);
   //Serial.println("init mp3 player");
