@@ -1,7 +1,7 @@
 #include <MPU9250_asukiaaa.h>
 #include <Adafruit_MPR121.h>
 #include <SoftwareSerial.h>
-#include <DFPlayer_Mini_Mp3.h>
+#include <DFRobotDFPlayerMini.h>
 
 #define TOUCH_PIN_NUM 12
 #define MAX_CHANNEL 3
@@ -17,6 +17,7 @@
 MPU9250 mySensor;
 Adafruit_MPR121 cap = Adafruit_MPR121();
 SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
+DFRobotDFPlayerMini myDFPlayer;
 
 uint8_t currentChannel = 1;
 uint8_t currentVolume = 1;
@@ -32,10 +33,14 @@ void setup() {
   mySensor.setWire(&Wire);
   mySensor.beginAccel();
   cap.begin(0x5A);
-  //Serial.println("init mp3 player");
-  mp3_set_serial(mySoftwareSerial);
-  mp3_set_volume(currentVolume);
-  //Serial.println("finished setup");
+
+  if (!myDFPlayer.begin(mySoftwareSerial)) {
+    Serial.println(F("Unable to begin:"));
+    Serial.println(F("1.Please recheck the connection!"));
+    Serial.println(F("2.Please insert the SD card!"));
+    while(true);
+  }
+  myDFPlayer.volume(currentVolume);
 }
 
 void loop() {
@@ -45,8 +50,8 @@ void loop() {
 
   if (candidateVolume != currentVolume) {
     currentVolume = candidateVolume;
-    Serial.println("set volume " + String(candidateVolume));
-    mp3_set_volume(currentVolume);
+    //Serial.println("set volume " + String(candidateVolume));
+    myDFPlayer.volume(currentVolume);
   }
 
   mySensor.accelUpdate();
@@ -61,13 +66,13 @@ void loop() {
     active_at = millis();
     if (playingMusic && isPlaying()) {
       Serial.println("play short sound " + String(currentChannel));
-      mp3_play_file_in_folder(currentChannel, 2);
+      myDFPlayer.playFolder(currentChannel, 2);
       currentChannel = getNextChannel(currentChannel);
       playingMusic = false;
     } else {
       Serial.println("play music " + String(currentChannel));
       playingMusic = true;
-      mp3_play_file_in_folder(currentChannel, 1);
+      myDFPlayer.playFolder(currentChannel, 1);
     }
   }
 
@@ -83,7 +88,7 @@ int getVolume() {
     + VOLUME_MIN;
   volume = max(volume, VOLUME_MIN);
   volume = min(volume, VOLUME_MAX);
-  Serial.println(volume);
+  //Serial.println(volume);
   return volume;
 }
 
