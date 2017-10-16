@@ -4,7 +4,7 @@ An arduino project to control accel sensor and touch sensor to play sound.
 # Requirements
 - [MPU9250_asukiaaa](https://github.com/asukiaaa/MPU9250_asukiaaa)
 - [Adafruit_MPR121](https://github.com/adafruit/Adafruit_MPR121)
-- [DFPlayer_Mini_Mp3](https://github.com/DFRobot/DFPlayer-Mini-mp3)
+- [DFRobotDFPlayerMini](https://github.com/DFRobot/DFRobotDFPlayerMini)
 
 # Conponents
 - Rotary register
