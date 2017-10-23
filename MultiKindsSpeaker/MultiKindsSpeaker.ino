@@ -30,6 +30,11 @@ DFRobotDFPlayerMini myDFPlayer;
 #define ECHO_PIN A2
 #define PLAY_CHECK_PIN 9
 #define MAX_CHANNEL 3
+#define VOLUME_PIN 3
+#define VOLUME_ANALOG_MAX 610
+#define VOLUME_ANALOG_MIN 0
+#define VOLUME_MAX 30
+#define VOLUME_MIN 1
 
 uint8_t currentChannel = 1;
 uint8_t currentVolume = 15;
@@ -78,12 +83,19 @@ void setup() {
 void loop() {
   //Serial.println(getDistance(TRIG_PIN, ECHO_PIN));
   //delay(1000);
+  uint8_t candidateVolume = getVolume();
   static float distance;
   Serial.print("distance: ");
   Serial.println(distance);
   Serial.print("playing?: ");
   Serial.println(isPlaying());
   distance = getDistance(TRIG_PIN, ECHO_PIN);
+
+  if (candidateVolume != currentVolume) {
+    currentVolume = candidateVolume;
+    //Serial.println("set volume " + String(candidateVolume));
+    myDFPlayer.volume(currentVolume);
+  }
 
   if (isPlaying() && playingMusic) {
     Serial.println("watch to stop");
@@ -107,5 +119,18 @@ void loop() {
       delay(1000);
     }
   }
+}
+
+int getVolume() {
+  int analogValue = analogRead(VOLUME_PIN);
+  int volume =
+    (analogValue - VOLUME_ANALOG_MIN)
+    * (VOLUME_MAX - VOLUME_MIN)
+    / (VOLUME_ANALOG_MAX - VOLUME_ANALOG_MIN)
+    + VOLUME_MIN;
+  volume = max(volume, VOLUME_MIN);
+  volume = min(volume, VOLUME_MAX);
+  //Serial.println(volume);
+  return volume;
 }
 
