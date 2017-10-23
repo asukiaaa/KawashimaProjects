@@ -21,9 +21,10 @@
 
 #include "Arduino.h"
 #include "SoftwareSerial.h"
-#include <DFPlayer_Mini_Mp3.h>
+#include <DFRobotDFPlayerMini.h>
 
 SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
+DFRobotDFPlayerMini myDFPlayer;
 
 #define TRIG_PIN A1
 #define ECHO_PIN A2
@@ -31,6 +32,7 @@ SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
 #define MAX_CHANNEL 3
 
 uint8_t currentChannel = 1;
+uint8_t currentVolume = 15;
 boolean playingMusic = false;
 
 boolean isPlaying() {
@@ -64,8 +66,13 @@ void setup() {
   Serial.println(F("DFRobot DFPlayer Mini Demo"));
   Serial.println(F("Initializing DFPlayer ... (May take 3~5 seconds)"));
 
-  mp3_set_serial(mySoftwareSerial);
-  mp3_set_volume(15);
+  if (!myDFPlayer.begin(mySoftwareSerial)) {
+    Serial.println(F("Unable to begin:"));
+    Serial.println(F("1.Please recheck the connection!"));
+    Serial.println(F("2.Please insert the SD card!"));
+    while(true);
+  }
+  myDFPlayer.volume(currentVolume);
 }
 
 void loop() {
@@ -83,8 +90,7 @@ void loop() {
     if (distance < 40) {
       Serial.println("stop music");
       playingMusic = false;
-      //playMusic(currentChannel, 2);
-      playMusic(1, 2);
+      myDFPlayer.playFolder(1, 2);
       delay(2000);
     }
 
@@ -96,17 +102,10 @@ void loop() {
         currentChannel = 1;
       }
       Serial.println("play music");
-      playMusic(currentChannel, 1);
+      myDFPlayer.playFolder(currentChannel, 1);
       playingMusic = true;
       delay(1000);
     }
   }
 }
 
-void playMusic(int channel, int number) {
-  //uint16_t play_number = 2 * (channel-1) + number;
-  //Serial.print("play: ");
-  //Serial.println(play_number);
-  //mp3_play(play_number);
-  mp3_play_file_in_folder(channel, number);
-}
