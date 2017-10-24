@@ -83,7 +83,7 @@ void setup() {
 void loop() {
   //Serial.println(getDistance(TRIG_PIN, ECHO_PIN));
   //delay(1000);
-  uint8_t candidateVolume = getVolume();
+  //uint8_t candidateVolume = getVolume();
   static float distance;
   Serial.print("distance: ");
   Serial.println(distance);
@@ -91,11 +91,11 @@ void loop() {
   Serial.println(isPlaying());
   distance = getDistance(TRIG_PIN, ECHO_PIN);
 
-  if (candidateVolume != currentVolume) {
-    currentVolume = candidateVolume;
-    //Serial.println("set volume " + String(candidateVolume));
-    myDFPlayer.volume(currentVolume);
-  }
+  //if (candidateVolume != currentVolume) {
+  //  currentVolume = candidateVolume;
+  //  //Serial.println("set volume " + String(candidateVolume));
+  //  myDFPlayer.volume(currentVolume);
+  //}
 
   if (isPlaying() && playingMusic) {
     Serial.println("watch to stop");
