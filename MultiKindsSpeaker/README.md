@@ -4,11 +4,11 @@ A project to play mp3 file by ultora sonic sensor value.
 # Connection
 - A1 - SonicSensor1 Trigger
 - A2 - SonicSensor1 Echo
-- A3 - SonicSensor2 Trigger
-- A4 - SonicSensor2 Echo
+- A3 - [10K rotary register + 1K register]
+- D8 - LED control
 - D9 - DFPlayer play detect
-- D10 - SoftSerial RX
-- D11 - SoftSerial TX
+- D10 - DFPlayer TX
+- D11 - DFPlayer RX through 0.3~1.0 register
 
 # Files on SD
 ```
