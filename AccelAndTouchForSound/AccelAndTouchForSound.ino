@@ -7,7 +7,7 @@
 #define MAX_CHANNEL 3
 #define PLAY_CHECK_PIN 9
 #define ACTIVE_BUFF_MS 1000
-#define ACCEL_MIN 1.3
+#define ACCEL_MIN 0.95
 #define VOLUME_PIN 3
 #define VOLUME_ANALOG_MAX 610
 #define VOLUME_ANALOG_MIN 0
@@ -56,7 +56,7 @@ void loop() {
 
   mySensor.accelUpdate();
   updateTouchStatus(&isTouched, &touchedPin);
-  float accel = mySensor.accelSqrt();
+  float accel = -mySensor.accelX();
   //Serial.println(accel);
 
   // wait ACTIVE_BUFF_MS from last activation
