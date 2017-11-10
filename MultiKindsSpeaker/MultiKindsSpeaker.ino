@@ -28,19 +28,12 @@ DFRobotDFPlayerMini myDFPlayer;
 
 #define TRIG_PIN A1
 #define ECHO_PIN A2
-#define LED_PIN 8
 #define PLAY_CHECK_PIN 9
 #define MAX_CHANNEL 3
-#define VOLUME_PIN 3
-#define VOLUME_ANALOG_MAX 910
-#define VOLUME_ANALOG_MIN 0
-#define VOLUME_MAX 30
-#define VOLUME_MIN 1
 
 uint8_t currentChannel = 1;
 uint8_t currentVolume = 15;
 boolean playingMusic = false;
-unsigned long changedMusicAt = 0;
 
 boolean isPlaying() {
   return (LOW == digitalRead(PLAY_CHECK_PIN));
@@ -64,7 +57,6 @@ float getDistance(int trig_pin, int echo_pin) {
 void setup() {
   pinMode(ECHO_PIN, INPUT);
   pinMode(TRIG_PIN, OUTPUT);
-  pinMode(LED_PIN, OUTPUT);
   pinMode(PLAY_CHECK_PIN, INPUT);
 
   mySoftwareSerial.begin(9600);
@@ -86,49 +78,22 @@ void setup() {
 void loop() {
   //Serial.println(getDistance(TRIG_PIN, ECHO_PIN));
   //delay(1000);
-  updateLed();
-  updatePlayer();
-}
-
-void updateLed() {
-  if (!isPlaying()) {
-    digitalWrite(LED_PIN, LOW);
-  } else if (!playingMusic) {
-    digitalWrite(LED_PIN, HIGH);
-  } else if (millis() / 1000 < 500) {
-    digitalWrite(LED_PIN, HIGH);
-  } else {
-    digitalWrite(LED_PIN, LOW);
-  }
-}
-
-void updatePlayer() {
   static float distance;
-  distance = getDistance(TRIG_PIN, ECHO_PIN);
   Serial.print("distance: ");
   Serial.println(distance);
   Serial.print("playing?: ");
   Serial.println(isPlaying());
-  uint8_t candidateVolume = getVolume();
+  distance = getDistance(TRIG_PIN, ECHO_PIN);
 
-  if (candidateVolume != currentVolume) {
-    currentVolume = candidateVolume;
-    // Serial.println("set volume " + String(candidateVolume));
-    myDFPlayer.volume(currentVolume);
-  }
-  // Serial.println("volume: " + String(currentVolume));
-
-  // Keep music for a minimum of 1 sec
-  if (millis() - changedMusicAt < 1000) {
-    return;
-  } else if (isPlaying() && playingMusic) {
+  if (isPlaying() && playingMusic) {
     Serial.println("watch to stop");
     if (distance < 40) {
       Serial.println("stop music");
       playingMusic = false;
       myDFPlayer.playFolder(1, 2);
-      changedMusicAt = millis();
+      delay(2000);
     }
+
   } else {
     Serial.println("wait to trigger playing");
     if (distance < 40) {
@@ -139,22 +104,7 @@ void updatePlayer() {
       Serial.println("play music");
       myDFPlayer.playFolder(currentChannel, 1);
       playingMusic = true;
-      changedMusicAt = millis();
+      delay(1000);
     }
   }
 }
-
-int getVolume() {
-  int analogValue = analogRead(VOLUME_PIN);
-  // Serial.println(analogValue);
-  int volume =
-    (analogValue - VOLUME_ANALOG_MIN)
-    * (VOLUME_MAX - VOLUME_MIN)
-    / (VOLUME_ANALOG_MAX - VOLUME_ANALOG_MIN)
-    + VOLUME_MIN;
-  volume = max(volume, VOLUME_MIN);
-  volume = min(volume, VOLUME_MAX);
-  // Serial.println(volume);
-  return volume;
-}
-
