@@ -1,7 +1,9 @@
-# AccelAndTouchForSound
-An arduino project to control accel sensor and touch sensor to play sound.
+# AccelAndTouchForSound-2017-10
+An arduino project to control accel sensor and touch sensor to play sound and a LED.
 
 # Requirements
+You can download them via library manager of Arduino IDE.
+
 - [MPU9250_asukiaaa](https://github.com/asukiaaa/MPU9250_asukiaaa)
 - [Adafruit_MPR121](https://github.com/adafruit/Adafruit_MPR121)
 - [DFRobotDFPlayerMini](https://github.com/DFRobot/DFRobotDFPlayerMini)
