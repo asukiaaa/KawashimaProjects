@@ -6,8 +6,7 @@
 #define TOUCH_PIN_NUM 12
 #define MAX_CHANNEL 3
 #define PLAY_CHECK_PIN 9
-#define ACTIVE_BUFF_MS 1000
-#define ACCEL_MIN 0.95
+#define STATE_BUFF_MS 1000
 #define VOLUME_PIN 3
 #define VOLUME_ANALOG_MAX 610
 #define VOLUME_ANALOG_MIN 0
@@ -22,7 +21,7 @@ DFRobotDFPlayerMini myDFPlayer;
 uint8_t currentChannel = 1;
 uint8_t currentVolume = 1;
 boolean playingMusic = false;
-unsigned long active_at = 0;
+unsigned long change_state_at = 0;
 
 void setup() {
   pinMode(PLAY_CHECK_PIN, INPUT);
@@ -56,20 +55,18 @@ void loop() {
 
   mySensor.accelUpdate();
   updateTouchStatus(&isTouched, &touchedPin);
-  float accel = -mySensor.accelX();
   //Serial.println(accel);
 
-  // wait ACTIVE_BUFF_MS from last activation
-  if ((accel > ACCEL_MIN || isTouched) &&
-      active_at + ACTIVE_BUFF_MS < millis()) {
-    //Serial.print("active");
-    active_at = millis();
-    if (playingMusic && isPlaying()) {
-      Serial.println("play short sound " + String(currentChannel));
+  // wait STATE_BUFF_MS from last state changing
+  if (change_state_at + STATE_BUFF_MS < millis()) {
+    if (playingMusic && isPlaying() && (mySensor.accelX < -0.95 || isTouched)) {
+      change_state_at = millis();
+      Serial.println("stop music and play short sound " + String(currentChannel));
+      playingMusic = false;
       myDFPlayer.playFolder(currentChannel, 2);
       currentChannel = getNextChannel(currentChannel);
-      playingMusic = false;
-    } else {
+    } else if (!playingMusic && (mySensor.accelX > -0.3 || isTouched)) {
+      change_state_at = millis();
       Serial.println("play music " + String(currentChannel));
       playingMusic = true;
       myDFPlayer.playFolder(currentChannel, 1);
