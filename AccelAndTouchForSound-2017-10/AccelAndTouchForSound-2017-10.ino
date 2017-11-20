@@ -55,17 +55,18 @@ void loop() {
 
   mySensor.accelUpdate();
   updateTouchStatus(&isTouched, &touchedPin);
+  float accelX = -mySensor.accelX();
   //Serial.println(accel);
 
   // wait STATE_BUFF_MS from last state changing
   if (change_state_at + STATE_BUFF_MS < millis()) {
-    if (playingMusic && isPlaying() && (mySensor.accelX < -0.95 || isTouched)) {
+    if (playingMusic && isPlaying() && (accelX > -0.7 || isTouched)) {
       change_state_at = millis();
       Serial.println("stop music and play short sound " + String(currentChannel));
       playingMusic = false;
       myDFPlayer.playFolder(currentChannel, 2);
       currentChannel = getNextChannel(currentChannel);
-    } else if (!playingMusic && (mySensor.accelX > -0.3 || isTouched)) {
+    } else if (!playingMusic && (accelX < -0.95 || isTouched)) {
       change_state_at = millis();
       Serial.println("play music " + String(currentChannel));
       playingMusic = true;
