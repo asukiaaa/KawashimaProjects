@@ -60,13 +60,13 @@ void loop() {
 
   // wait STATE_BUFF_MS from last state changing
   if (change_state_at + STATE_BUFF_MS < millis()) {
-    if (playingMusic && isPlaying() && (accelX > -0.7 || isTouched)) {
+    if (playingMusic && isPlaying() && (accelX < -0.8 || isTouched)) {
       change_state_at = millis();
       Serial.println("stop music and play short sound " + String(currentChannel));
       playingMusic = false;
       myDFPlayer.playFolder(currentChannel, 2);
       currentChannel = getNextChannel(currentChannel);
-    } else if (!playingMusic && (accelX < -0.95 || isTouched)) {
+    } else if (!playingMusic && (-0.7 < accelX || isTouched)) {
       change_state_at = millis();
       Serial.println("play music " + String(currentChannel));
       playingMusic = true;
