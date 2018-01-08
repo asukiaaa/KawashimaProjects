@@ -56,4 +56,5 @@ void loop() {
       digitalWrite(LED_PINS[i], LOW);
     }
   }
+  delay(1000);
 }
