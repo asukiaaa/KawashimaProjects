@@ -48,7 +48,8 @@ void loop() {
     delay(100);
   }
   accel = accel / 10;
-  level = min((max(accel, 0) * 13), 11);
+  level = min((max(accel, 0) * (LED_NUM + 3)), LED_NUM + 1);
+  level --;
 #ifdef DEBUG_MODE
   Serial.println("accel: " + String(accel));
   Serial.println("level: " + String(level));
