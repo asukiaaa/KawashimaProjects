@@ -41,8 +41,13 @@ void setup() {
 }
 
 void loop() {
-  mySensor.accelUpdate();
-  accel = mySensor.accelX();
+  accel = 0;
+  for (i=0; i<10; i++) {
+    mySensor.accelUpdate();
+    accel += mySensor.accelX();
+    delay(100);
+  }
+  accel = accel / 10;
   level = min((max(accel, 0) * 13), 11);
 #ifdef DEBUG_MODE
   Serial.println("accel: " + String(accel));
@@ -56,5 +61,4 @@ void loop() {
       digitalWrite(LED_PINS[i], LOW);
     }
   }
-  delay(1000);
 }
