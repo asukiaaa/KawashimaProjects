@@ -5,18 +5,18 @@
 MPU9250 mySensor;
 
 const int LED_PINS[] = {
-  4,
-  5,
-  A1,
-  A0,
   6,
   7,
-  15,
-  14,
   8,
   9,
+  10,
   16,
-  10
+  14,
+  15,
+  A0,
+  A1,
+  A2,
+  A3
 };
 
 const int LED_NUM = sizeof(LED_PINS) / sizeof(int);
