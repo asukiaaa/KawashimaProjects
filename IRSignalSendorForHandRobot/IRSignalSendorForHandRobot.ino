@@ -1,6 +1,6 @@
 #include <IRremote.h>
 
-#define TOUCH_THRESHOLD_COUNT 10
+#define TOUCH_THRESHOLD_COUNT 2
 #define A_OUT_PIN 4
 #define A_IN_PIN  5
 #define B_OUT_PIN 6
@@ -25,23 +25,30 @@ void setup() {
 
 void loop() {
   if (isTouched(A_OUT_PIN, A_IN_PIN)) {
+    Serial.println("send A");
     irsend.sendNEC(signalA, 32);
   }
   if (isTouched(B_OUT_PIN, B_IN_PIN)) {
+    Serial.println("send B");
     irsend.sendNEC(signalB, 32);
   }
   if (isTouched(C_OUT_PIN, C_IN_PIN)) {
+    Serial.println("send C");
     irsend.sendNEC(signalC, 32);
   }
   delay(10);
 }
 
 bool isTouched(int outPin, int inPin) {
-  digitalWrite(outPin, HIGH);
   unsigned int count = 0;
+  digitalWrite(outPin, HIGH);
   while (digitalRead(inPin) == LOW) {
-    count++;
+    ++count;
   }
+  if (count > TOUCH_THRESHOLD_COUNT)
+    Serial.println(count);
+  delay(1);
   digitalWrite(outPin, LOW);
+  delay(1);
   return (count > TOUCH_THRESHOLD_COUNT);
 }

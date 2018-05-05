@@ -64,3 +64,4 @@ unsigned int  data = 0x8F71AE5;
 # References
 - [Arduino-IRremote](https://github.com/z3t0/Arduino-IRremote)
 - [第23回 Arduinoでパーツやセンサーを使ってみよう～赤外線リモコン（前編）](http://deviceplus.jp/hobby/entry023/)
+- [CapSense (静電容量センサ)](http://www.musashinodenpa.com/arduino/ref/index.php?f=1&pos=2165)
