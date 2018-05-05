@@ -1,4 +1,4 @@
-# IRSignalSendorForHandRobot
+# IRSignalSenderForHandRobot
 A project to control hand robot via IR signal.
 
 # Setup
